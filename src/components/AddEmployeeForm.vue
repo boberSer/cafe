@@ -1,26 +1,29 @@
 <template>
-  <form :style="props.openedModals ? 'display: flex' : 'display: none'">
+  <form @submit="authEmployee" class="form-modal" :style="openedModals ? 'display: flex' : 'display: none'">
     <div>
-      <h2>Добавление нового сотрудника</h2>
+      <div class="nav">
+        <h2>Добавление нового сотрудника</h2>
+        <img src="@/assets/icons/plus.svg" alt="plus" @click.prevent="closeModal">
+      </div>
       <div>
         <label for="name">Имя</label>
-        <input type="text" name="name" id="name">
+        <input type="text" name="name" id="name" v-model="employee.name">
       </div>
       <div>
         <label for="login">Логин</label>
-        <input type="text" name="login" id="login">
+        <input type="text" name="login" id="login" v-model="employee.login">
       </div>
       <div>
         <label for="password">Пароль</label>
-        <input type="password" name="password" id="password">
+        <input type="password" name="password" id="password" v-model="employee.password">
       </div>
       <div>
         <label for="photo_file" class="photo_input">Фото</label>
-        <input type="file" name="photo" id="photo_file">
+        <input @change="employee.photo_file" type="file" name="photo" id="photo_file">
       </div>
       <div>
         <label for="role">Роль</label>
-        <select name="role" id="role">
+        <select name="role" id="role" v-model="employee.role">
           <option value="nothing" selected disabled>Выберите роль:</option>
           <option value="1">Администратор</option>
           <option value="2">Официант</option>
@@ -29,44 +32,43 @@
       </div>
       <div>
         <button class="approve_button">Отправить</button>
-        <button class="cancel_button">Отмена</button>
+        <button @click.prevent="closeModal" class="cancel_button">Отмена</button>
       </div>
     </div>
   </form>
 </template>
 
 <script setup>
+import {reactive} from "vue";
+const emit = defineEmits(["close-modal", "auth-employees"]);
 
-const props = defineProps({
+defineProps({
   openedModals: {
     type: Boolean,
-    required: true
+    required: true,
+    readonly: false
   }
 })
+
+let employee = reactive({
+  name: '',
+  login: '',
+  password: '',
+  photo_file: null,
+  role_ie: ''
+})
+
+const authEmployee = () => {
+  emit('auth-employees', employee);
+  closeModal();
+}
+
+const closeModal = () => {
+  emit('close-modal');
+}
 
 </script>
 
 <style scoped>
-form {
-  justify-content: center;
-  align-items: center;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  position: absolute;
-  z-index: 9;
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
-}
 
-form > div {
-  background: #005fb6;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 32px;
-  border-radius: 10px;
-}
 </style>

@@ -1,6 +1,9 @@
 <template>
-  <app-header />
-  <router-view />
+  <div class="wrapper">
+    <app-header />
+    <router-view />
+    <app-footer />
+  </div>
 </template>
 
 <style>
@@ -35,4 +38,5 @@ nav a {
 </style>
 <script setup>
 import AppHeader from "@/components/AppHeader.vue";
+import AppFooter from "@/components/AppFooter.vue";
 </script>

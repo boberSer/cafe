@@ -14,14 +14,15 @@
           :employee="employee"
       />
     </section>
-    <add-employee :openedModals="openedModal" />
+    <add-employee @auth-employees="authEmployees" @close-modal="closeModal" :openedModals="openedModal" />
   </div>
 </template>
 
 <script setup>
 import EmployeeItem from "@/components/EmployeeItem.vue";
-import {computed, ref} from "vue";
+import { ref } from "vue";
 import AddEmployee from "@/components/AddEmployeeForm.vue";
+import {BASE_URL} from "@/consts";
 
 let employees = [
   {
@@ -48,9 +49,39 @@ let employees = [
 
 let openedModal = ref(false)
 
+// TODO complete fetch (not finished response and not good file catcher)
+
+const authEmployees = async (employees) => {
+  try {
+    const res = await fetch( BASE_URL + "user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        name: employees.name,
+        login: employees.login,
+        password: employees.password,
+        photo_file: employees.photo_file,
+        role_id: employees.role_id,
+      })
+    })
+    if(!res.ok) throw 'mistake'
+    const { data } = await res.json()
+    console.log(data)
+  } catch(e) {
+    console.error(e)
+  }
+}
+
 const openModalAddEmployees = () => {
   openedModal.value = !openedModal.value
-  console.log(openedModal.value)
+}
+
+const closeModal = () => {
+  openedModal.value = false
 }
 
 </script>

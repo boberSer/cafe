@@ -1,18 +1,20 @@
 <template>
   <div class="home">
-    <main>
-
-    </main>
+      Вечер в хату коллеги!
   </div>
 </template>
 
 <script setup>
-import EmployeesListView from "@/views/EmployeesListView.vue";
-import ShiftListView from "@/views/ShiftListView.vue";
-import OrdersListView from "@/views/OrdersListView.vue";
 
 </script>
 
 <style>
-
+.home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 34px;
+  font-weight: bold;
+}
 </style>

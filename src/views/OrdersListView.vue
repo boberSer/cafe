@@ -1,54 +1,79 @@
+<template>
+  <div>
+    <section class="orders">
+      <button @click="openModalAddOrders" class="approve_button">Принять заказ</button>
+      <order-item
+          v-for="(order, index) in orders"
+          :key="index"
+          :order="order"
+      />
+    </section>
+    <add-order-form @add-order="addOrder" @close-modal="closeModal" :opened-modals="openedModal" />
+  </div>
+</template>
+
 <script setup>
+import OrderItem from "@/components/OrderItem.vue";
+import AddOrderForm from "@/components/AddOrderForm.vue";
+import {ref} from "vue";
+import {BASE_URL} from "@/consts";
+
+let orders = [
+  {
+    id: 1,
+    personal: 'Данек',
+    status: 1,
+    price: 9990
+  },
+  {
+    id: 2,
+    personal: 'Ванек',
+    status: 2,
+    price: 9990
+  },
+  {
+    id: 3,
+    personal: 'Санек',
+    status: 3,
+    price: 9990
+  },
+]
+
+// TODO not complete fetch api (finished response and
+
+const addOrder = async (order) => {
+  try{
+    const res = await fetch(BASE_URL + "order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({
+        work_shift_id: order.work_shift_id,
+        table_id: order.table_id,
+        number_of_person: order.number_of_person
+      })
+    })
+    if(!res.ok) throw 'mistake'
+    const {data} = await res.json()
+    console.log(data)
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+let openedModal = ref(false)
+
+const openModalAddOrders = () => {
+  openedModal.value = !openedModal.value
+}
+
+const closeModal = () => {
+  openedModal.value = false
+}
 
 </script>
-
-<template>
-  <section class="orders">
-    <button class="approve_button">Принять заказ</button>
-    <article>
-      <h2>Столик №1</h2>
-      <p>Официант: John</p>
-      <p class="fired">Статус: Отмена</p>
-      <p>Цена: 9238</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №2</h2>
-      <p>Официант: John</p>
-      <p class="working">Статус: Принят</p>
-      <p>Цена: 238</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №3</h2>
-      <p>Официант: John</p>
-      <p class="working">Статус: Готов</p>
-      <p>Цена: 1436</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №4</h2>
-      <p>Официант: John</p>
-      <p class="working">Статус: Оплачен</p>
-      <p>Цена: 2316</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №5</h2>
-      <p>Официант: John</p>
-      <p class="working">Статус: Оплачен</p>
-      <p>Цена: 345345</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Столик №6</h2>
-      <p>Официант: Mike</p>
-      <p class="working">Статус: Оплачен</p>
-      <p>Цена: 1212</p>
-      <button class="approve_button">Управление</button>
-    </article>
-  </section>
-</template>
 
 <style scoped>
 .orders {

@@ -7,13 +7,31 @@
       <router-link class="header-buttons" to="/employees">Сотрудники</router-link>
       <router-link class="header-buttons" to="/shifts">Смены</router-link>
       <router-link class="header-buttons" to="/orders">Заказы</router-link>
-      <router-link to="/auth" class="header-buttons approve_button">Вход</router-link>
-      <router-link to="/" class="header-buttons cancel_button">Выход</router-link>
+      <button @click="logout" class="header-buttons cancel_button">Выход</button>
     </nav>
   </header>
 </template>
 
 <script setup>
+
+import {BASE_URL} from "@/consts";
+
+const logout = async () => {
+  try{
+    const res = await fetch(BASE_URL + 'logout', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    if(!res.ok) throw 'mistake';
+    const { data } = await res.json();
+    console.log(data)
+  } catch(e) {
+    console.error(e)
+  }
+}
 
 </script>
 
@@ -24,7 +42,6 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
   padding: 25px;
   border-bottom: 1px solid #005fb6;
 }

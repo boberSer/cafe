@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   employee: {
     type: Object, required: true
   },

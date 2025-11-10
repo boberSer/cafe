@@ -1,45 +1,70 @@
 <template>
-  <section class="shift">
-    <button class="approve_button">Добавить смену</button>
-    <article>
-      <h2>Смена №5</h2>
-      <p>Начало смены в 2021-09-19 08:00</p>
-      <p>Конец смены в 2021-09-19 18:00</p>
-      <p class="working">Статус: Открыта</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Смена №4</h2>
-      <p>Начало смены в 2021-09-18 08:00</p>
-      <p>Конец смены в 2021-09-18 18:00</p>
-      <p class="fired">Статус: Закрыта</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Смена №3</h2>
-      <p>Начало смены в 2021-09-17 08:00</p>
-      <p>Конец смены в 2021-09-17 18:00</p>
-      <p class="fired">Статус: Закрыта</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Смена №2</h2>
-      <p>Начало смены в 2021-09-16 08:00</p>
-      <p>Конец смены в 2021-09-16 18:00</p>
-      <p class="fired">Статус: Закрыта</p>
-      <button class="approve_button">Управление</button>
-    </article>
-    <article>
-      <h2>Смена №1</h2>
-      <p>Начало смены в 2021-09-15 08:00</p>
-      <p>Конец смены в 2021-09-15 18:00</p>
-      <p class="fired">Статус: Закрыта</p>
-      <button class="approve_button">Управление</button>
-    </article>
-  </section>
+  <div>
+    <section class="shift">
+      <button @click="openModalAddShifts" class="approve_button">Добавить смену</button>
+      <shift-item
+          v-for="(shift, index) in shifts"
+          :key="index"
+          :shift="shift"
+      />
+    </section>
+    <add-shift-form @add-shift="addShift" :opened-modals="openedModal" @close-modal="closeModal" />
+  </div>
 </template>
 
 <script setup>
+import AddShiftForm from "@/components/AddShiftForm.vue";
+import ShiftItem from "@/components/ShiftItem.vue";
+import {ref} from "vue";
+import {BASE_URL} from "@/consts";
+
+let shifts = [
+  {
+    id: 1,
+    startData: '2020-09-14 08:00',
+    endData: '2021-09-14 08:00',
+    status: 1
+  },
+  {
+    id: 2,
+    startData: '2020-09-14 08:00',
+    endData: '2021-09-14 08:00',
+    status: 1
+  },
+  {
+    id: 3,
+    startData: '2020-09-14 08:00',
+    endData: '2021-09-14 08:00',
+    status: 2
+  },
+]
+
+let openedModal = ref(false)
+
+const addShift = async (shift) => {
+  try {
+    const res = await fetch(BASE_URL + "work-shift", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    if(!res.ok) throw 'mistake'
+    const { data } = await res.json();
+    console.log(data)
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+const openModalAddShifts = () => {
+  openedModal.value = !openedModal.value
+}
+
+const closeModal = () => {
+  openedModal.value = false
+}
 
 </script>
 

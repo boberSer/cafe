@@ -1,13 +1,13 @@
 <template>
-  <form>
+  <form @submit.prevent="onSubmit">
     <h2>Авторизация</h2>
     <div>
       <label for="login_enter">Логин</label>
-      <input type="text" name="login" id="login_enter">
+      <input type="text" name="login" id="login_enter" v-model="loginData.login">
     </div>
     <div>
       <label for="password_enter">Пароль</label>
-      <input type="password" name="password" id="password_enter">
+      <input type="password" name="password" id="password_enter" v-model="loginData.password">
     </div>
     <div>
       <button class="approve_button">Отправить</button>
@@ -17,8 +17,20 @@
 </template>
 
 <script setup>
+import {reactive} from "vue";
 
-import AddEmployee from "@/components/AddEmployeeForm.vue";
+const emit = defineEmits(["login"]);
+
+const loginData = reactive({
+  login: '',
+  password: ''
+})
+
+const onSubmit = () => {
+  emit("login", loginData);
+  console.log(loginData);
+}
+
 </script>
 
 

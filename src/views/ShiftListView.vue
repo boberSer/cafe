@@ -60,10 +60,12 @@ const addShift = async (shift) => {
 
 const openModalAddShifts = () => {
   openedModal.value = !openedModal.value
+  document.body.style.overflowY = "hidden"
 }
 
 const closeModal = () => {
   openedModal.value = false
+  document.body.style.overflowY = "auto"
 }
 
 </script>

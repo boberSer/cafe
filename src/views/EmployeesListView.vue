@@ -7,11 +7,11 @@
         <span>Должность</span>
         <button @click="openModalAddEmployees()">+</button>
       </article>
-
       <employee-item
           v-for="(employee, index) in employees"
           :key="index"
           :employee="employee"
+          @to-dismiss="toDismiss"
       />
     </section>
     <add-employee @auth-employees="authEmployees" @close-modal="closeModal" :openedModals="openedModal" />
@@ -20,68 +20,76 @@
 
 <script setup>
 import EmployeeItem from "@/components/EmployeeItem.vue";
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 import AddEmployee from "@/components/AddEmployeeForm.vue";
 import {BASE_URL} from "@/consts";
 
-let employees = [
-  {
-    name: "Данек",
-    status: "Уволен",
-    post: "Администратор",
-  },
-  {
-    name: "Ванек",
-    status: "Работает",
-    post: "Официант",
-  },
-  {
-    name: "Ванек",
-    status: "Уволен",
-    post: "Повар",
-  },
-  {
-    name: "Санек",
-    status: "Работает",
-    post: "Администратор",
-  },
-]
-
+let employees = ref([])
 let openedModal = ref(false)
 
-// TODO complete fetch (not finished response and not good file catcher)
-
-const authEmployees = async (employees) => {
+const authEmployees = async (formData) => {
   try {
     const res = await fetch( BASE_URL + "user", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         "Accept": "application/json",
         "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({
-        name: employees.name,
-        login: employees.login,
-        password: employees.password,
-        photo_file: employees.photo_file,
-        role_id: employees.role_id,
-      })
+      body: formData
     })
-    if(!res.ok) throw 'mistake'
-    const { data } = await res.json()
-    console.log(data)
+    if(!res.ok) throw 'mistake';
+    await getEmployees();
   } catch(e) {
     console.error(e)
   }
 }
 
+const getEmployees = async () => {
+  try {
+    const res = await fetch( BASE_URL + "user", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      }
+    })
+    if(!res.ok) throw 'mistake'
+    const {data} = await res.json()
+    employees.value = data
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+const toDismiss = async (params) => {
+  try{
+    const res = await fetch( BASE_URL + `user/${params}/to-dismiss`, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      }
+    })
+    if(!res.ok) throw 'mistake'
+    const { data } = await res.json();
+    employees.value[params - 1].status = data
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+onMounted(() => {
+  getEmployees()
+})
+
 const openModalAddEmployees = () => {
   openedModal.value = !openedModal.value
+  document.body.style.overflowY = "hidden"
 }
 
 const closeModal = () => {
   openedModal.value = false
+  document.body.style.overflowY = "auto"
 }
 
 </script>

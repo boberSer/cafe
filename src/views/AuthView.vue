@@ -1,5 +1,5 @@
 <template>
-  <article class="modal" style="display: none">
+  <article class="modal">
     <auth-form @login="login"/>
     <add-shift-form/>
     <add-order-form/>
@@ -30,7 +30,7 @@ const login = async (loginData) => {
     if(!res.ok) throw 'mistake'
 
     const { data } = await res.json()
-    localStorage.setItem('token', data.token)
+    localStorage.setItem('token', data.user_token)
     await router.push('/home')
 
   } catch (error) {

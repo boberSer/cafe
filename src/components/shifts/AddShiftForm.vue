@@ -3,10 +3,11 @@
     <div>
       <div class="nav">
         <h2>Добавление смены</h2>
-        <img @click.prevent="closeModal" src="@/assets/icons/plus.svg" alt="plus">
+        <img @click.prevent="closeModal" src="../../assets/icons/plus.svg" alt="plus">
       </div>
       <div>
         <label for="start">Начало</label>
+        <label for="start">Начало смены не должно быть раньше, чем текущая дата</label>
         <input type="datetime-local" name="login" id="start" v-model="shift.start">
       </div>
       <div>
@@ -49,5 +50,16 @@ const closeModal = () => {
 </script>
 
 <style scoped>
+input {
+  align-self: center;
+}
 
+.nav {
+  width: 100%;
+}
+
+.nav + div {
+  display: flex;
+  flex-direction: column;
+}
 </style>

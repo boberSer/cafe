@@ -8,7 +8,7 @@
 
 <script setup>
 import AuthForm from "@/components/AuthForm.vue";
-import AddShiftForm from "@/components/AddShiftForm.vue";
+import AddShiftForm from "@/components/shifts/AddShiftForm.vue";
 import AddOrderForm from "@/components/AddOrderForm.vue";
 import {BASE_URL} from "@/consts";
 import {useRouter} from "vue-router";

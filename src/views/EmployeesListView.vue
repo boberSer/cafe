@@ -19,9 +19,9 @@
 </template>
 
 <script setup>
-import EmployeeItem from "@/components/EmployeeItem.vue";
+import EmployeeItem from "@/components/employees/EmployeeItem.vue";
 import {onMounted, ref} from "vue";
-import AddEmployee from "@/components/AddEmployeeForm.vue";
+import AddEmployee from "@/components/employees/AddEmployeeForm.vue";
 import {BASE_URL} from "@/consts";
 
 let employees = ref([])

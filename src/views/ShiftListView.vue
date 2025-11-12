@@ -13,31 +13,12 @@
 </template>
 
 <script setup>
-import AddShiftForm from "@/components/AddShiftForm.vue";
-import ShiftItem from "@/components/ShiftItem.vue";
-import {ref} from "vue";
+import AddShiftForm from "@/components/shifts/AddShiftForm.vue";
+import ShiftItem from "@/components/shifts/ShiftItem.vue";
+import {onMounted, ref} from "vue";
 import {BASE_URL} from "@/consts";
 
-let shifts = [
-  {
-    id: 1,
-    startData: '2020-09-14 08:00',
-    endData: '2021-09-14 08:00',
-    status: 1
-  },
-  {
-    id: 2,
-    startData: '2020-09-14 08:00',
-    endData: '2021-09-14 08:00',
-    status: 1
-  },
-  {
-    id: 3,
-    startData: '2020-09-14 08:00',
-    endData: '2021-09-14 08:00',
-    status: 2
-  },
-]
+let shifts = ref([])
 
 let openedModal = ref(false)
 
@@ -48,11 +29,32 @@ const addShift = async (shift) => {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem("token")}`
-      }
+      },
+      body: JSON.stringify({
+        "start": shift.start.replace(/T/g, ' '),
+        "end": shift.end.replace(/T/g, ' '),
+      })
     });
     if(!res.ok) throw 'mistake'
-    const { data } = await res.json();
-    console.log(data)
+    const data  = await res.json();
+    shifts.value.push(data)
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+const getShifts = async () => {
+  try {
+    const res = await fetch(BASE_URL + "work-shift", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+    if(!res.ok) throw 'mistake'
+    const data = await res.json();
+    shifts.value = data
   } catch(e) {
     console.error(e)
   }
@@ -60,13 +62,17 @@ const addShift = async (shift) => {
 
 const openModalAddShifts = () => {
   openedModal.value = !openedModal.value
-  document.body.style.overflowY = "hidden"
+  // document.body.style.overflowY = "hidden"
 }
 
 const closeModal = () => {
   openedModal.value = false
   document.body.style.overflowY = "auto"
 }
+
+onMounted(() => {
+  getShifts()
+})
 
 </script>
 

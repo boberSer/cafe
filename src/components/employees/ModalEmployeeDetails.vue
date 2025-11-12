@@ -3,7 +3,7 @@
     <div>
       <div class="nav">
         <h2>Подробнее о сотруднике: {{props.employee.name}}</h2>
-        <img @click.prevent="closeModal" src="@/assets/icons/plus.svg" alt="plus">
+        <img @click.prevent="closeModal" src="../../assets/icons/plus.svg" alt="plus">
       </div>
       <div class="refactor-employee">
         <div class="employee-card">

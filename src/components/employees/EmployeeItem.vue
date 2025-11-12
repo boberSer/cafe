@@ -6,6 +6,7 @@
       <span>{{ props.employee.group }}</span>
       <button @click="openModalEmployee">Подробнее</button>
     </article>
+
     <modal-employee-details
         :employee="props.employee"
         @close-modal="closeModal"
@@ -17,7 +18,7 @@
 
 <script setup>
 import {ref} from "vue";
-import ModalEmployeeDetails from "@/components/ModalEmployeeDetails.vue";
+import ModalEmployeeDetails from "@/components/employees/ModalEmployeeDetails.vue";
 import {BASE_URL} from "@/consts";
 
 const props = defineProps({
@@ -45,7 +46,7 @@ const openModalEmployee = async () => {
   } catch(e) {
     console.error(e)
   }
-  // document.body.style.overflowY = "hidden"
+  document.body.style.overflowY = "hidden"
 }
 
 const toDismiss = (params) => {
@@ -60,6 +61,11 @@ const closeModal = () => {
 </script>
 
 <style scoped>
+.employee-item {
+  display: flex;
+  flex-direction: column;
+}
+
 .employee-item > article {
   display: flex;
   flex: 1;
@@ -125,5 +131,10 @@ const closeModal = () => {
 
 .fired {
   text-shadow: 0 0 5px #ad0d0d;
+}
+
+.shift-worker {
+  display: flex;
+  flex-direction: column;
 }
 </style>

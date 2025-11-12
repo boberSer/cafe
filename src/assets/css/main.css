@@ -48,9 +48,10 @@ a {
 /* modal */
 
 .modal {
-    position: absolute;
-    min-width: 100vw;
-    min-height: 100vh;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
     left: 0;
     background: rgba(0, 95, 182, 1);
     z-index: 100;
@@ -63,6 +64,7 @@ a {
 .approve_button {
     background: rgba(108, 201, 15, 0.8) !important;
     border: none !important;
+    cursor: pointer;
 }
 
 .cancel_button {
@@ -181,7 +183,7 @@ form button {
     right: 0;
     top: 0;
     bottom: 0;
-    position: absolute;
+    position: fixed;
     z-index: 9;
     border-radius: 15px;
     backdrop-filter: blur(10px);

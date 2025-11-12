@@ -3,7 +3,7 @@
     <div>
       <div class="nav">
         <h2>Добавление нового сотрудника</h2>
-        <img src="@/assets/icons/plus.svg" alt="plus" @click.prevent="closeModal">
+        <img src="../../assets/icons/plus.svg" alt="plus" @click.prevent="closeModal">
       </div>
       <div>
         <label for="name">Имя</label>

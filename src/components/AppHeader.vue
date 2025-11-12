@@ -9,12 +9,18 @@
       <router-link class="header-buttons" to="/orders">Заказы</router-link>
       <button @click="logout" class="header-buttons cancel_button">Выход</button>
     </nav>
+    <article>
+      <span>Авторизация под аккаунтом: {{ login }}</span>
+      <span>Сила воли: {{ post === 1 ? 'Администратор' : post === 2 ? 'Официант' : 'Повар' }}</span>
+    </article>
   </header>
 </template>
 
 <script setup>
-
 import {BASE_URL} from "@/consts";
+import {useAuthStore} from "@/stores/store";
+
+const { logout: storeLogout, login, post } = useAuthStore();
 
 const logout = async () => {
   try{
@@ -27,7 +33,7 @@ const logout = async () => {
     });
     if(!res.ok) throw 'mistake';
     const { data } = await res.json();
-    console.log(data)
+    storeLogout()
   } catch(e) {
     console.error(e)
   }

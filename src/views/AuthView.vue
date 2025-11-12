@@ -12,6 +12,9 @@ import AddShiftForm from "@/components/shifts/AddShiftForm.vue";
 import AddOrderForm from "@/components/AddOrderForm.vue";
 import {BASE_URL} from "@/consts";
 import {useRouter} from "vue-router";
+import {useAuthStore} from "@/stores/store";
+
+const { saveToken, saveLogin } = useAuthStore();
 
 const router = useRouter();
 
@@ -30,7 +33,8 @@ const login = async (loginData) => {
     if(!res.ok) throw 'mistake'
 
     const { data } = await res.json()
-    localStorage.setItem('token', data.user_token)
+    saveLogin(loginData.login)
+    saveToken(data.user_token)
     await router.push('/home')
 
   } catch (error) {

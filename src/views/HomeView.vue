@@ -5,6 +5,14 @@
 </template>
 
 <script setup>
+import {useAuthStore} from "@/stores/store";
+import {onMounted} from "vue";
+
+const {checkPost} = useAuthStore();
+
+onMounted(async () => {
+  await checkPost()
+})
 
 </script>
 

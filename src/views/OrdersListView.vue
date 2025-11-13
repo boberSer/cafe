@@ -13,31 +13,12 @@
 </template>
 
 <script setup>
-import OrderItem from "@/components/OrderItem.vue";
-import AddOrderForm from "@/components/AddOrderForm.vue";
+import OrderItem from "@/components/orders/OrderItem.vue";
+import AddOrderForm from "@/components/orders/AddOrderForm.vue";
 import {ref} from "vue";
 import {BASE_URL} from "@/consts";
 
-let orders = [
-  {
-    id: 1,
-    personal: 'Данек',
-    status: 1,
-    price: 9990
-  },
-  {
-    id: 2,
-    personal: 'Ванек',
-    status: 2,
-    price: 9990
-  },
-  {
-    id: 3,
-    personal: 'Санек',
-    status: 3,
-    price: 9990
-  },
-]
+let orders = ref([])
 
 // TODO not complete fetch api (finished response and
 
@@ -57,7 +38,7 @@ const addOrder = async (order) => {
     })
     if(!res.ok) throw 'mistake'
     const {data} = await res.json()
-    console.log(data)
+    orders.value = data
   } catch(e) {
     console.error(e)
   }

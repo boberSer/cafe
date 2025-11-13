@@ -6,6 +6,7 @@
           v-for="(shift, index) in shifts"
           :key="index"
           :shift="shift"
+          :users="users"
       />
     </section>
     <add-shift-form @add-shift="addShift" :opened-modals="openedModal" @close-modal="closeModal" />
@@ -17,10 +18,11 @@ import AddShiftForm from "@/components/shifts/AddShiftForm.vue";
 import ShiftItem from "@/components/shifts/ShiftItem.vue";
 import {onMounted, ref} from "vue";
 import {BASE_URL} from "@/consts";
+import {api} from "@/stores/store";
 
 let shifts = ref([])
-
 let openedModal = ref(false)
+const users = ref([])
 
 const addShift = async (shift) => {
   try {
@@ -59,6 +61,34 @@ const getShifts = async () => {
     console.error(e)
   }
 }
+
+const getUsers = async () => {
+  try {
+    try {
+      const res = await fetch( BASE_URL + "user", {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        }
+      })
+      if(!res.ok) throw 'mistake'
+      const {data} = await res.json()
+      users.value = data
+    } catch(e) {
+      console.error(e)
+    }
+    // const res = await api('user',)
+    // const { data } = await res.json();
+    // users.value = data
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+onMounted(() => {
+  getUsers()
+})
 
 const openModalAddShifts = () => {
   openedModal.value = !openedModal.value

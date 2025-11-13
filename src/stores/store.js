@@ -22,7 +22,7 @@ export const api = async (url, options = {}) => {
 }
 
 const token = ref('')
-const login = ref('')
+const login = ref(localStorage.getItem('login') || '')
 const post = ref('')
 
 export const useAuthStore = () => {
@@ -32,7 +32,7 @@ export const useAuthStore = () => {
     }
 
     const saveLogin = (data) => {
-        token.value = JSON.stringify(data)
+        login.value = data
         localStorage.setItem('login', data)
     }
 
@@ -47,18 +47,23 @@ export const useAuthStore = () => {
             })
             if(adminResponse.status === 200) {
                 post.value = 1
+                localStorage.setItem('post', post.value)
             } else {
                 if(adminResponse.status === 403) {
-                    const ofikResponse = await fetch( BASE_URL + "work-shift/1/orders", {
+                    const cookResponse = await fetch( BASE_URL + "order/taken/get", {
                         method: "GET",
                         headers: {
                             "Accept": "application/json",
                             "Authorization": `Bearer ${localStorage.getItem("token")}`,
                         }
                     })
-                    if(ofikResponse.status === 200) {
+                    if(cookResponse.status === 200) {
+                        post.value = 3
+                        localStorage.setItem('post', post.value)
+                    } else {
                         post.value = 2
-                    } else post.value = 3
+                        localStorage.setItem('post', post.value)
+                    }
                 }
             }
 
@@ -70,7 +75,8 @@ export const useAuthStore = () => {
     const logout = () => {
         token.value = ''
         localStorage.removeItem('token')
-        router.push('/')
+        login.value = ''
+        localStorage.removeItem('login')
     }
 
     return {

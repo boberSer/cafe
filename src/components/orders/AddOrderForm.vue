@@ -3,7 +3,7 @@
     <div>
       <div class="nav">
         <h2>Добавление заказа</h2>
-        <img src="@/assets/icons/plus.svg" alt="plus" @click="closeModal">
+        <img src="../../assets/icons/plus.svg" alt="plus" @click="closeModal">
       </div>
       <div>
         <label for="work_shift_id">Работник</label>

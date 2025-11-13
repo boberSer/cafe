@@ -1,15 +1,11 @@
 <template>
   <article class="modal">
     <auth-form @login="login"/>
-    <add-shift-form/>
-    <add-order-form/>
   </article>
 </template>
 
 <script setup>
 import AuthForm from "@/components/AuthForm.vue";
-import AddShiftForm from "@/components/shifts/AddShiftForm.vue";
-import AddOrderForm from "@/components/AddOrderForm.vue";
 import {BASE_URL} from "@/consts";
 import {useRouter} from "vue-router";
 import {useAuthStore} from "@/stores/store";

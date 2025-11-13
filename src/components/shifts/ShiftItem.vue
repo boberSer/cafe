@@ -9,6 +9,8 @@
         :opened-modal="openedModal"
         @close-modal="closeModal"
         :shift="shiftDetails"
+        :shiftWithOrders="shiftWithOrders"
+        :users="users"
     />
   </article>
 </template>
@@ -22,17 +24,26 @@ const props = defineProps({
   shift: {
     type: Object,
     required: true
+  },
+  users: {
+    type: Array,
+    required: true
   }
 })
 
-let shiftDetails = ref([])
 
+let shiftDetails = ref([])
+let shiftWithOrders = ref([])
 let openedModal = ref(false)
 
-const openModalShift =async () => {
+
+const openModalShift = async () => {
   openedModal.value = !openedModal.value
   const { data } = await api(`work-shift/${props.shift.id}`)
   shiftDetails.value = data
+
+  const { data: d } = await api(`work-shift/${props.shift.id}/order`)
+  shiftWithOrders.value = d
   document.body.style.overflowY = "hidden"
 
 }

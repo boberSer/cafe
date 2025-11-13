@@ -39,4 +39,12 @@ nav a {
 <script setup>
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
+import {useAuthStore} from "@/stores/store";
+import {onMounted} from "vue";
+
+const { checkPost } = useAuthStore();
+
+onMounted(() => {
+  checkPost()
+})
 </script>

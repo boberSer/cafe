@@ -16,13 +16,15 @@
           </div>
         </div>
         <div class="shift-workers">
-          <div v-if="activeShift.length <= 0">
-            На смену никого не добавили
-          </div>
-          <div class="shift-worker" v-for="(user, index) in shift.users" :key="index">
-            <span>Имя сотрудника: {{ user.name }}</span>
-            <span>Должность: {{ user.group }}</span>
-            <button @click="deleteFromShift(props.shift.id, user.id)">Снять с смены</button>
+          <div class="shift-scroll">
+            <div v-if="activeShift.length <= 0">
+              На смену никого не добавили
+            </div>
+            <div class="shift-worker" v-for="(user, index) in shift.users" :key="index">
+              <span>Имя сотрудника: {{ user.name }}</span>
+              <span>Должность: {{ user.group }}</span>
+              <button @click="deleteFromShift(props.shift.id, user.id)">Снять с смены</button>
+            </div>
           </div>
           <div>
             <select v-model="selectedUserId" name="users" id="users">
@@ -33,11 +35,11 @@
           </div>
         </div>
       </div>
-      <div class="orders-list">
+      <div class="orders-list shift-scroll">
         <div class="order" v-for="order in shiftWithOrders?.orders">
           <h2>{{order.table}}</h2>
           <span>Официант на смене: {{order.shift_workers}}</span>
-          <span>Дата оформления заказа: {{order.create_at}}</span>
+          <span>Дата оформления заказа: {{order.create_at.replace(/\.\d+Z/, '').replace(/T/g, ' ')}}</span>
           <span>Статус заказа: {{order.status}}</span>
           <span>Стоимость заказа: {{order.price}}</span>
         </div>
@@ -143,12 +145,15 @@ button {
   display: flex;
   gap: 10px;
   align-self: flex-start;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .shift-card {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  margin-top: 27px;
 }
 
 .disabled {
@@ -161,10 +166,17 @@ button {
   justify-content: space-between;
   align-items: center;
 }
+
 .shift-workers {
   display: flex;
   flex-direction: column;
   gap: 15px;
+
+}
+
+.shift-scroll {
+  overflow-y: scroll;
+  max-height: 200px;
 }
 
 .das {

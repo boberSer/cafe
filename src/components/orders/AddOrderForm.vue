@@ -6,10 +6,6 @@
         <img src="../../assets/icons/plus.svg" alt="plus" @click="closeModal">
       </div>
       <div>
-        <label for="work_shift_id">Работник</label>
-        <input type="text" name="login" id="work_shift_id" v-model="order.word_shift_id">
-      </div>
-      <div>
         <label for="table_id">Номер столика</label>
         <input type="number" name="password" id="table_id" v-model="order.table_id">
       </div>

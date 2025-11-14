@@ -5,8 +5,8 @@
     </article>
     <nav>
       <router-link v-if="post === 1" class="header-buttons" to="/employees">Сотрудники</router-link>
-      <router-link v-if="post !== 2 " class="header-buttons" to="/shifts">Смены</router-link>
-      <router-link class="header-buttons" to="/orders">Заказы</router-link>
+      <router-link v-if="post === 1" class="header-buttons" to="/shifts">Смены</router-link>
+      <router-link v-if="post !== 1" class="header-buttons" to="/orders">Заказы</router-link>
       <button @click="logout" class="header-buttons cancel_button">Выход</button>
     </nav>
     <article class="user">

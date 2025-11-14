@@ -7,6 +7,13 @@
           :key="index"
           :order="order"
       />
+      <order-active-shift
+          v-if="activeShift"
+          :active-orders="activeOrders"
+          :active-shift="activeShift"
+          @change-order-status="changeOrderStatus"
+          :opened-modal="openedModal"
+      />
     </section>
     <add-order-form @add-order="addOrder" @close-modal="closeModal" :opened-modals="openedModal" />
   </div>
@@ -15,10 +22,17 @@
 <script setup>
 import OrderItem from "@/components/orders/OrderItem.vue";
 import AddOrderForm from "@/components/orders/AddOrderForm.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {BASE_URL} from "@/consts";
+import {api} from "@/stores/store";
+import OrderActiveShift from "@/components/orders/OrderActiveShift.vue";
+import {useAuthStore} from "@/stores/store";
+
+const {login} = useAuthStore();
 
 let orders = ref([])
+let activeShift = ref([])
+let activeOrders = ref([])
 
 // TODO not complete fetch api (finished response and
 
@@ -31,7 +45,7 @@ const addOrder = async (order) => {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify({
-        work_shift_id: order.work_shift_id,
+        work_shift_id: activeShift.value.id,
         table_id: order.table_id,
         number_of_person: order.number_of_person
       })
@@ -43,6 +57,53 @@ const addOrder = async (order) => {
     console.error(e)
   }
 }
+
+const getActiveShift = async () => {
+    try {
+      const {data} = await api('work-shift/active/get')
+      activeShift.value = data
+      await getShiftOrders()
+    } catch(e) {
+      console.error(e)
+    }
+}
+
+const getOrders = async () => {
+  try {
+    const {data} = await api('order/taken/get')
+    orders.value = data
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+const getShiftOrders = async () => {
+  try {
+    const {data} = await api(`work-shift/${activeShift.value.id}/order`)
+    for(let order of data.orders) {
+      if(login.value === order.shift_workers) {
+        activeOrders.value.push(order)
+      }
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const changeOrderStatus = async (params, id) => {
+  console.log(params)
+  try {
+    await api(`order/${id}/change-status`, {method: 'PATCH', body: JSON.stringify({"status": params})})
+    await getShiftOrders()
+  } catch(e) {
+    console.error(e)
+  }
+}
+
+onMounted(() => {
+  getOrders()
+  getActiveShift()
+})
 
 let openedModal = ref(false)
 
@@ -62,7 +123,7 @@ const closeModal = () => {
 .orders {
   display: grid;
   justify-items: center;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .orders > :first-child {
@@ -78,7 +139,7 @@ const closeModal = () => {
   cursor: pointer;
 }
 
-.orders > article {
+.orders article {
   margin: 1rem;
   background: #4B98E0E5;
   padding: 1rem;
@@ -88,19 +149,19 @@ const closeModal = () => {
   justify-content: center;
 }
 
-.orders > article > h2 {
+.orders article > h2 {
   display: flex;
   justify-content: center;
   margin-bottom: .3rem;
   font-size: 2rem;
 }
 
-.orders > article > p {
+.orders article > p {
   margin-bottom: 1rem;
   font-size: 1.3rem;
 }
 
-.orders > article > button {
+.orders article > button {
   padding: 1rem;
   font-size: 1.3rem;
   font-weight: bold;

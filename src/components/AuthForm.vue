@@ -28,7 +28,6 @@ const loginData = reactive({
 
 const onSubmit = () => {
   emit("login", loginData);
-  console.log(loginData);
 }
 
 </script>
